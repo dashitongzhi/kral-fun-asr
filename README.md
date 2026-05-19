@@ -34,6 +34,7 @@ Online Experience:
 
 # What's New 🔥
 
+- 2026/05: Fun-ASR-Nano now supports speaker diarization. Use with `vad_model` + `spk_model` + `punc_model` to get per-sentence speaker labels. Requires installing FunASR from source: `pip install git+https://github.com/modelscope/FunASR.git`
 - 2025/12: [Fun-ASR-Nano-2512](https://modelscope.cn/models/FunAudioLLM/Fun-ASR-Nano-2512) is an end-to-end speech recognition large model trained on tens of millions of hours real speech data. It supports low-latency real-time transcription and covers 31 languages.
 - 2024/7: [FunASR](https://github.com/modelscope/FunASR) is a fundamental speech recognition toolkit that offers a variety of features, including speech recognition (ASR), Voice Activity Detection (VAD), Punctuation Restoration, Language Models, Speaker Verification, Speaker Diarization and multi-talker ASR.
 
@@ -61,7 +62,7 @@ pip install -r requirements.txt
 # TODO
 
 - [x] Support returning timestamps
-- [ ] Support speaker diarization
+- [x] Support speaker diarization
 - [x] Support model training
 
 # Usage 🛠️
@@ -113,6 +114,38 @@ def main():
     res = model.generate(input=[wav_path], cache={}, batch_size=1)
     text = res[0]["text"]
     print(text)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### Speaker Diarization
+
+```python
+from funasr import AutoModel
+
+
+def main():
+    model_dir = "FunAudioLLM/Fun-ASR-Nano-2512"
+    model = AutoModel(
+        model=model_dir,
+        trust_remote_code=True,
+        remote_code="./model.py",
+        vad_model="fsmn-vad",
+        vad_kwargs={"max_single_segment_time": 30000},
+        spk_model="cam++",
+        punc_model="ct-punc",
+        device="cuda:0",
+        hub="hf",
+    )
+
+    wav_path = f"{model.model_path}/example/zh.mp3"
+    res = model.generate(input=[wav_path], cache={}, batch_size=1, language="中文")
+
+    # Per-sentence results with speaker labels
+    for sent in res[0]["sentence_info"]:
+        print(f"Speaker {sent['spk']}: [{sent['start']}ms - {sent['end']}ms] {sent['text']}")
 
 
 if __name__ == "__main__":
