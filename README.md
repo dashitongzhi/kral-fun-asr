@@ -34,6 +34,7 @@ Online Experience:
 
 # What's New 🔥
 
+- 2026/05: **vLLM Inference Engine** — native high-throughput batch (3-5x faster) + WebSocket real-time streaming service. See [vLLM Guide](docs/vllm_guide.md).
 - 2026/05: Fun-ASR-Nano now supports speaker diarization. Use with `vad_model` + `spk_model` + `punc_model` to get per-sentence speaker labels. Requires installing FunASR from source: `pip install git+https://github.com/modelscope/FunASR.git`
 - 2025/12: [Fun-ASR-Nano-2512](https://modelscope.cn/models/FunAudioLLM/Fun-ASR-Nano-2512) is an end-to-end speech recognition large model trained on tens of millions of hours real speech data. It supports low-latency real-time transcription and covers 31 languages.
 - 2024/7: [FunASR](https://github.com/modelscope/FunASR) is a fundamental speech recognition toolkit that offers a variety of features, including speech recognition (ASR), Voice Activity Detection (VAD), Punctuation Restoration, Language Models, Speaker Verification, Speaker Diarization and multi-talker ASR.
@@ -181,6 +182,88 @@ if __name__ == "__main__":
 - `device`: Specify the device to use, such as "cuda:0" or "cpu".
 
 </details>
+
+
+# vLLM High-Throughput Inference 🚀
+
+Fun-ASR natively integrates the [vLLM](https://github.com/vllm-project/vllm) engine for high-throughput batch inference and production-grade real-time streaming service.
+
+> Full guide: [docs/vllm_guide.md](docs/vllm_guide.md) | API docs: [modelscope.github.io/FunASR/vllm.html](https://modelscope.github.io/FunASR/vllm.html)
+
+### Three Modes
+
+| Mode | Use Case | Entry |
+|------|----------|-------|
+| **Offline Batch** | Large-scale transcription | `AutoModelVLLM` |
+| **Streaming SDK** | Real-time subtitles | `FunASRNanoStreamingVLLM` |
+| **WebSocket Service** | Production deployment | `serve_realtime_ws.py` |
+
+### Offline Batch Inference (3-5x faster)
+
+```python
+from funasr.auto.auto_model_vllm import AutoModelVLLM
+
+model = AutoModelVLLM(
+    model="FunAudioLLM/Fun-ASR-Nano-2512",
+    tensor_parallel_size=2,      # Multi-GPU
+    gpu_memory_utilization=0.8,
+)
+
+results = model.generate(
+    ["audio1.wav", "audio2.wav", "audio3.wav"],
+    language="中文",
+    hotwords=["张三", "北京"],
+)
+for r in results:
+    print(f"[{r['key']}] {r['text']}")
+```
+
+### Real-time WebSocket Service
+
+```bash
+# Start server (with dynamic VAD + speaker diarization)
+python serve_realtime_ws.py --port 10095 --language 中文 --tensor-parallel-size 2
+
+# Browser client
+open client_mic.html
+
+# Python client
+python client_python.py --server ws://localhost:10095 --mic
+```
+
+**WebSocket Protocol:**
+```
+Client: "START" → Server: {"event":"started"}
+Client: [audio bytes] → Server: {"sentences":[...], "partial":"..."}
+Client: "STOP" → Server: {"sentences":[...], "is_final":true}
+```
+
+### Streaming SDK
+
+```python
+from funasr.models.fun_asr_nano.inference_vllm_streaming import FunASRNanoStreamingVLLM
+
+engine = FunASRNanoStreamingVLLM.from_pretrained(
+    model="FunAudioLLM/Fun-ASR-Nano-2512", chunk_ms=720
+)
+
+for result in engine.streaming_generate("audio.wav", language="中文"):
+    print(f"[{result['audio_duration_ms']:.0f}ms] {result['fixed_text']}")
+```
+
+### Performance
+
+| Config | Latency (5.6s audio) | Speedup |
+|--------|---------------------|---------|
+| PyTorch (baseline) | 0.89s | 1x |
+| vLLM 1-GPU | 0.30s | **3x** |
+| vLLM 2-GPU TP | ~0.20s | **4.5x** |
+
+### Install
+
+```bash
+pip install funasr>=1.3.3 vllm>=0.12.0
+```
 
 # Finetune
 
