@@ -325,6 +325,25 @@ We evaluated Fun-ASR against other state-of-the-art models on open-source benchm
   result = model.generate(input="audio.wav", batch_size=32)
   ```
 
+## Ecosystem
+
+Fun-ASR-Nano is part of the **FunAudioLLM** family:
+
+| Project | Description | Stars |
+|---------|-------------|-------|
+| [FunASR](https://github.com/modelscope/FunASR) | Industrial speech recognition toolkit — VAD, ASR, punctuation, diarization | [![](https://img.shields.io/github/stars/modelscope/FunASR?style=social)](https://github.com/modelscope/FunASR) |
+| [SenseVoice](https://github.com/FunAudioLLM/SenseVoice) | Multilingual speech understanding — ASR + emotion + audio events | [![](https://img.shields.io/github/stars/FunAudioLLM/SenseVoice?style=social)](https://github.com/FunAudioLLM/SenseVoice) |
+| [CosyVoice](https://github.com/FunAudioLLM/CosyVoice) | Natural speech generation — multi-language, zero-shot cloning | [![](https://img.shields.io/github/stars/FunAudioLLM/CosyVoice?style=social)](https://github.com/FunAudioLLM/CosyVoice) |
+| [FunClip](https://github.com/modelscope/FunClip) | AI-powered video clipping with speech recognition | [![](https://img.shields.io/github/stars/modelscope/FunClip?style=social)](https://github.com/modelscope/FunClip) |
+
+<a href="https://star-history.com/#FunAudioLLM/Fun-ASR&modelscope/FunASR&FunAudioLLM/SenseVoice&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=FunAudioLLM/Fun-ASR,modelscope/FunASR,FunAudioLLM/SenseVoice&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=FunAudioLLM/Fun-ASR,modelscope/FunASR,FunAudioLLM/SenseVoice&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=FunAudioLLM/Fun-ASR,modelscope/FunASR,FunAudioLLM/SenseVoice&type=Date" />
+  </picture>
+</a>
+
 ## Citations
 
 ```bibtex
