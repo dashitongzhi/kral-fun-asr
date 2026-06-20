@@ -45,6 +45,19 @@ The whole pipeline runs in C++:
 The audio embeddings are fed into the LLM through `llama_decode`'s embedding-input
 path — exactly how llava/mtmd inject vision embeddings.
 
+## Download pre-built GGUF (fastest — no Python ML env)
+```bash
+./download-funasr-model.sh nano                # pulls encoder + Qwen3-0.6B + fsmn-vad GGUF from Hugging Face
+llama-funasr-cli --enc funasr-gguf/funasr-encoder-f16.gguf -m funasr-gguf/qwen3-0.6b-q8_0.gguf \
+    -a audio.wav --vad funasr-gguf/fsmn-vad.gguf
+```
+Pre-converted GGUF: [FunAudioLLM/Fun-ASR-Nano-GGUF](https://huggingface.co/FunAudioLLM/Fun-ASR-Nano-GGUF) · [fsmn-vad-GGUF](https://huggingface.co/FunAudioLLM/fsmn-vad-GGUF). Or convert yourself: `python convert-funasr-to-gguf.py nano-encoder --wtype f16`.
+
+## Build (standalone, CI-friendly)
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release      # fetches pinned llama.cpp; static, self-contained
+cmake --build build -j                          # -> build/bin/llama-funasr-*
+```
 ## Quickstart
 
 **1. Build** (drop the examples into a llama.cpp checkout):
