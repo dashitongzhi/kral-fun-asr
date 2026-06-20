@@ -63,6 +63,7 @@ cmake --build build -j                          # -> build/bin/llama-funasr-*
 **1. Build** (drop the examples into a llama.cpp checkout):
 ```bash
 git clone https://github.com/ggml-org/llama.cpp && cd llama.cpp
+cp -r /path/to/runtime/llama.cpp/funasr-common examples/   # shared audio loader (miniaudio); each example CMake adds ../funasr-common
 cp -r /path/to/runtime/llama.cpp/funasr-cli examples/
 echo 'add_subdirectory(funasr-cli)' >> examples/CMakeLists.txt
 cmake -B build -DGGML_NATIVE=ON -DLLAMA_CURL=OFF
