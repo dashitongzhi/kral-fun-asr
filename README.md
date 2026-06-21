@@ -73,7 +73,16 @@ pip install -r requirements.txt
 
 ## Inference
 
-> **CPU / edge (no GPU, no Python):** run Fun-ASR-Nano as a single self-contained binary via **llama.cpp / GGUF** — like whisper.cpp. See [runtime/llama.cpp/](runtime/llama.cpp/).
+### Run on CPU / edge — llama.cpp / GGUF (no GPU, no Python)
+
+Run Fun-ASR-Nano as a **single self-contained binary** — like [whisper.cpp](https://github.com/ggml-org/whisper.cpp) but for FunASR, with strong Chinese accuracy. Built-in FSMN-VAD, no Python at runtime.
+
+```bash
+bash download-funasr-model.sh nano ./gguf
+llama-funasr-cli --enc ./gguf/funasr-encoder-f16.gguf -m ./gguf/qwen3-0.6b-q8_0.gguf -a audio.wav --vad ./gguf/fsmn-vad.gguf
+```
+
+**Prebuilt binaries:** [Releases](../../releases) · **Download & quickstart:** [funasr.com/llama-cpp](https://www.funasr.com/llama-cpp.html) · **GGUF:** [Hugging Face](https://huggingface.co/FunAudioLLM/Fun-ASR-Nano-GGUF) · **Docs & benchmarks:** [runtime/llama.cpp/](./runtime/llama.cpp/)
 
 ### Using funasr for inference
 
