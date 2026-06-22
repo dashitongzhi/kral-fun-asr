@@ -36,6 +36,7 @@ Online Experience:
 
 # What's New 🔥
 
+- 2026/06: **Fun-ASR-Nano on llama.cpp / GGUF** — run it on CPU/edge as a single self-contained binary (whisper.cpp-style), built-in VAD, no Python at runtime. Quantized models down to ~484 MB. [runtime/llama.cpp/](./runtime/llama.cpp/) · [Releases](../../releases) · [GGUF on Hugging Face](https://huggingface.co/FunAudioLLM/Fun-ASR-Nano-GGUF)
 - 2026/05: **vLLM Inference Engine** — native high-throughput batch (3-5x faster) + WebSocket real-time streaming service. See [vLLM Guide](docs/vllm_guide.md).
 - 2026/05: Fun-ASR-Nano now supports speaker diarization. Use with `vad_model` + `spk_model` + `punc_model` to get per-sentence speaker labels. Requires installing FunASR from source: `pip install git+https://github.com/modelscope/FunASR.git`
 - 2025/12: [Fun-ASR-Nano-2512](https://modelscope.cn/models/FunAudioLLM/Fun-ASR-Nano-2512) is an end-to-end speech recognition large model trained on tens of millions of hours real speech data. It supports low-latency real-time transcription and covers 31 languages.
