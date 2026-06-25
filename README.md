@@ -253,6 +253,12 @@ for r in results:
     print(f"[{r['key']}] {r['text']}")
 ```
 
+> **Long audio:** `AutoModelVLLM` decodes each input in a single pass, so a long
+> recording (e.g. a multi-minute meeting) can be truncated — pre-segment it with
+> VAD and pass the segments, or use the high-level
+> `AutoModel(model=..., vad_model="fsmn-vad")`, which segments long audio
+> automatically.
+
 ### Real-time WebSocket Service
 
 ```bash
@@ -349,13 +355,9 @@ We evaluated Fun-ASR against other state-of-the-art models on open-source benchm
 
 ## Remarkable Third-Party Work
 
-- **vLLM Inference Engine (Native)**: Fun-ASR now has built-in vLLM support for high-throughput batch inference and real-time streaming. [Guide](docs/vllm_guide.md) | [Demo](demo_vllm.py)
-  ```bash
-  # Quick start with vLLM
-  from funasr import AutoModelVLLM
-  model = AutoModelVLLM(model="FunAudioLLM/Fun-ASR-Nano-2512", device="cuda", dtype="bf16")
-  result = model.generate(input="audio.wav", batch_size=32)
-  ```
+- **[Fun-ASR-vllm](https://github.com/yuekaizhang/Fun-ASR-vllm)** ([@yuekaizhang](https://github.com/yuekaizhang)) — a community vLLM implementation of Fun-ASR (~50% speedup over PyTorch), with batch inference and an NVIDIA Triton Inference Server integration for high-concurrency production deployment. See [#34](https://github.com/FunAudioLLM/Fun-ASR/issues/34).
+
+> Native vLLM support is also built in — see [vLLM High-Throughput Inference 🚀](#vllm-high-throughput-inference-) above for the `AutoModelVLLM` batch engine, the streaming SDK, and the WebSocket service.
 
 ## Ecosystem
 
